@@ -1,0 +1,228 @@
+
+#########################################################
+gycosylation, all evidence tag
+#########################################################
+
+
+SELECT DISTINCT ?evi 
+WHERE 
+{
+  ?state a rdf:Statement.
+  ?state rdf:subject ?protein.
+  # protein
+  ?protein a up:Protein.
+
+	# glycosylation
+  ?state rdf:object ?annotation.
+  ?annotation a up:Glycosylation_Annotation.
+  ?annotation up:range ?range .
+  ?range faldo:begin/faldo:position ?begin .
+
+	# evidence
+  ?state up:attribution ?attr.
+  ?attr up:evidence ?evi.
+}
+limit 100
+
+evi
+http://purl.obolibrary.org/obo/ECO_0000305	curator inference used in manual assertion
+http://purl.obolibrary.org/obo/ECO_0000269	experimental evidence used in manual assertion
+http://purl.obolibrary.org/obo/ECO_0000250	sequence similarity evidence used in manual assertion
+http://purl.obolibrary.org/obo/ECO_0000255	match to sequence model evidence used in manual assertion
+http://purl.obolibrary.org/obo/ECO_0000213	combinatorial evidence used in automatic assertion
+http://purl.obolibrary.org/obo/ECO_0000244	combinatorial evidence used in manual assertion
+http://purl.obolibrary.org/obo/ECO_0000303	non-traceable author statement used in manual assertion
+http://purl.obolibrary.org/obo/ECO_0000256	match to sequence model evidence used in automatic assertion
+http://purl.obolibrary.org/obo/ECO_0000312	imported information used in manual assertion
+
+
+#########################################################
+pritein, seq-length, gycosylation, citation, evidence tag
+#########################################################
+
+PREFIX foaf:<http://xmlns.com/foaf/0.1/>
+SELECT DISTINCT ?protein ?begin ?evi ?topic ?title
+WHERE 
+{
+  ?state a rdf:Statement.
+  ?state rdf:subject ?protein.
+  # protein
+  ?protein a up:Protein.
+
+  # seq-length
+	?seq up:sequenceFor ?protein.
+	?seq a up:Sequence.
+	?seq up:length ?len.
+
+	# glycosylation
+  ?state rdf:object ?annotation.
+  ?annotation a up:Glycosylation_Annotation.
+  ?annotation up:range ?range .
+  ?range faldo:begin/faldo:position ?begin .
+
+	# evidence
+  ?state up:attribution ?attr.
+  ?attr up:evidence ?evi.
+
+	# citation
+  OPTIONAL{
+  ?attr up:source ?source.
+	?source foaf:primaryTopicOf  ?topic.
+	?source up:title ?title.
+  }
+}
+
+limit 100
+
+  VALUES ?protein { uniprotkb:B0R8E4  uniprotkb:P25062 }
+
+###################
+tag of gycosylation
+###################
+
+PREFIX foaf:<http://xmlns.com/foaf/0.1/>
+SELECT distinct ?protein ?begin ?citation ?evi
+WHERE 
+{
+  ?state a rdf:Statement.
+  ?state rdf:subject ?protein.
+  ?protein a up:Protein.
+
+	# glycosylation
+  ?state rdf:object ?annotation.
+  ?annotation a up:Glycosylation_Annotation.
+  ?annotation up:range ?range .
+  ?range faldo:begin/faldo:position ?begin .
+
+	# evidence
+  ?state up:attribution ?attr.
+  ?attr up:evidence ?evi.
+  ?attr up:source ?citation.
+
+}
+limit 100
+
+
+SELECT distinct ?s ?e
+WHERE{
+?s up:evidence ?e.
+}
+
+e
+http://purl.obolibrary.org/obo/ECO_0000256
+http://purl.obolibrary.org/obo/ECO_0000259
+http://purl.obolibrary.org/obo/ECO_0000313
+http://purl.obolibrary.org/obo/ECO_0000501
+http://purl.obolibrary.org/obo/ECO_0000213
+http://purl.obolibrary.org/obo/ECO_0000244
+http://purl.obolibrary.org/obo/ECO_0000250
+http://purl.obolibrary.org/obo/ECO_0000255
+http://purl.obolibrary.org/obo/ECO_0000269 (experimental evidence used in manual assertion)
+http://purl.obolibrary.org/obo/ECO_0000303
+http://purl.obolibrary.org/obo/ECO_0000305
+http://purl.obolibrary.org/obo/ECO_0000312
+http://purl.obolibrary.org/obo/ECO_0000315
+http://purl.obolibrary.org/obo/ECO_0000318
+http://purl.obolibrary.org/obo/ECO_0000314
+http://purl.obolibrary.org/obo/ECO_0000353
+http://purl.obolibrary.org/obo/ECO_0000304
+http://purl.obolibrary.org/obo/ECO_0000317
+http://purl.obolibrary.org/obo/ECO_0000247
+http://purl.obolibrary.org/obo/ECO_0000270
+http://purl.obolibrary.org/obo/ECO_0000316
+http://purl.obolibrary.org/obo/ECO_0000266
+
+###############################
+position of a glycosylation site
+###############################
+
+PREFIX foaf:<http://xmlns.com/foaf/0.1/>
+SELECT distinct ?protein ?len ?begin ?topic 
+WHERE 
+{
+    ?state a rdf:Statement.
+    ?state rdf:subject ?protein.
+    ?protein a up:Protein.
+
+	# sequence length
+		?seq up:sequenceFor ?protein.
+		?seq a up:Sequence.
+		?seq up:length ?len.
+
+	# glycosylation
+    ?state rdf:object ?annotation.
+    ?annotation a up:Glycosylation_Annotation.
+    ?annotation up:range ?range .
+    ?range faldo:begin/faldo:position ?begin .
+
+	# citation
+   ?state up:attribution ?attr.
+   ?attr up:source ?source.
+   ?source foaf:primaryTopicOf  ?topic.
+   ?source up:title ?title.
+
+}
+limit 100
+
+
+###############
+sequence length
+###############
+
+http://purl.uniprot.org/uniprot/#_P02338-citation-7034959	
+	rdf:subject	http://purl.uniprot.org/uniprot/P02338
+
+
+select distinct ?protein ?len
+where{
+?protein a up:Protein.
+?seq up:sequenceFor ?protein.
+?seq a up:Sequence.
+?seq up:length ?len.
+} limit 10
+
+
+select distinct ?protein ?len
+where{
+?protein a up:Protein.
+?seq up:sequenceFor ?protein.
+?seq a up:Sequence.
+?seq up:length ?len.
+}
+
+
+
+
+Subject	Predicate	Object
+http://purl.uniprot.org/uniparc/UPI0001505B8F	up:memberOf	http://purl.uniprot.org/uniref/UniRef100_P02338
+http://purl.uniprot.org/uniparc/UPI0001505B8F	up:length	"29"xsd:int
+http://purl.uniprot.org/uniparc/UPI0001505B8F	up:sequenceFor	http://purl.uniprot.org/uniprot/A0A0E1LWF4
+http://purl.uniprot.org/uniref/UniRef90_P02338	up:member	http://purl.uniprot.org/uniparc/UPI0001505B8F
+http://purl.uniprot.org/uniparc/UPI0001505B8F	rdf:type	up:Sequence
+http://purl.uniprot.org/uniparc/UPI0001505B8F	rdfs:label	Protamine-like protein
+http://purl.uniprot.org/uniref/UniRef50_P02338	up:member	http://purl.uniprot.org/uniparc/UPI0001505B8F
+http://purl.uniprot.org/uniparc/UPI0001505B8F	up:memberOf	http://purl.uniprot.org/uniref/UniRef50_P02338
+http://purl.uniprot.org/uniref/UniRef100_P02338	up:member	http://purl.uniprot.org/uniparc/UPI0001505B8F
+http://purl.uniprot.org/uniparc/UPI0001505B8F	up:sequenceFor	http://purl.uniprot.org/uniprot/A0A0P8CJ02
+http://purl.uniprot.org/uniparc/UPI0001505B8F	up:sequenceFor	http://purl.uniprot.org/uniprot/P02338
+http://purl.uniprot.org/uniparc/UPI0001505B8F	up:memberOf	http://purl.uniprot.org/uniref/UniRef90_P02338
+
+
+
+select distinct ?p_class
+where{
+?subject a up:Protein.
+?state rdf:subject ?subject.
+?state rdf:predicate ?predicate.
+}
+
+resutlts
+p_class
+up:mappedCitation
+up:citation
+up:annotation
+up:classifiedWith
+up:enzyme
+up:organism
+up:isolatedFrom
+up:encodedIn

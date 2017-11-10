@@ -1,0 +1,206 @@
+
+PREFIX keywords:<http://purl.uniprot.org/keywords/> 
+PREFIX uniprotkb:<http://purl.uniprot.org/uniprot/> 
+PREFIX taxon:<http://purl.uniprot.org/taxonomy/> 
+PREFIX ec:<http://purl.uniprot.org/enzyme/> 
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX skos:<http://www.w3.org/2004/02/skos/core#> 
+PREFIX owl:<http://www.w3.org/2002/07/owl#> 
+PREFIX bibo:<http://purl.org/ontology/bibo/> 
+PREFIX dc:<http://purl.org/dc/terms/> 
+PREFIX xsd:<http://www.w3.org/2001/XMLSchema#> 
+PREFIX up:<http://purl.uniprot.org/core/> 
+PREFIX faldo:<http://biohackathon.org/resource/faldo#> 
+PREFIX foaf:<http://xmlns.com/foaf/0.1/>
+
+SELECT distinct  ?protein ?seq
+#?begin  ?topic ?title
+WHERE 
+{
+    ?state a rdf:Statement.
+    ?state rdf:subject ?protein.
+    ?protein a up:Protein.
+
+    ?protein up:sequence ?seq.
+    ?seq a up:Simple_Sequence.
+
+    ?state rdf:object ?annotation.
+    ?annotation a up:Glycosylation_Annotation.
+    ?annotation up:range ?range .
+    ?range faldo:begin/faldo:position ?begin .
+    ?range faldo:end/faldo:position ?end.
+
+   ?state up:attribution ?attr.
+   ?attr up:source ?source.
+   ?source foaf:primaryTopicOf  ?topic.
+   ?source up:title ?title.
+
+}
+limit 100
+
+
+
+PREFIX keywords:<http://purl.uniprot.org/keywords/> 
+PREFIX uniprotkb:<http://purl.uniprot.org/uniprot/> 
+PREFIX taxon:<http://purl.uniprot.org/taxonomy/> 
+PREFIX ec:<http://purl.uniprot.org/enzyme/> 
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX skos:<http://www.w3.org/2004/02/skos/core#> 
+PREFIX owl:<http://www.w3.org/2002/07/owl#> 
+PREFIX bibo:<http://purl.org/ontology/bibo/> 
+PREFIX dc:<http://purl.org/dc/terms/> 
+PREFIX xsd:<http://www.w3.org/2001/XMLSchema#> 
+PREFIX up:<http://purl.uniprot.org/core/> 
+PREFIX faldo:<http://biohackathon.org/resource/faldo#> 
+PREFIX foaf:<http://xmlns.com/foaf/0.1/>
+
+SELECT distinct  ?protein ?begin  ?topic ?title
+WHERE 
+{
+	?state a rdf:Statement.
+	VALUES ?protein { <http://purl.uniprot.org/uniprot/P01024> }  
+	?state rdf:subject ?protein.
+	?protein a up:Protein.
+
+	?state rdf:object ?annotation.
+  ?annotation a up:Glycosylation_Annotation.
+	?annotation up:range ?range .
+	?range faldo:begin/faldo:position ?begin .
+	?range faldo:end/faldo:position ?end.
+	
+   ?state up:attribution ?attr.
+   ?attr up:source ?source.
+   ?source foaf:primaryTopicOf  ?topic.
+   ?source up:title ?title.
+         
+} order by ?begin
+
+PREFIX keywords:<http://purl.uniprot.org/keywords/> 
+PREFIX uniprotkb:<http://purl.uniprot.org/uniprot/> 
+PREFIX taxon:<http://purl.uniprot.org/taxonomy/> 
+PREFIX ec:<http://purl.uniprot.org/enzyme/> 
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX skos:<http://www.w3.org/2004/02/skos/core#> 
+PREFIX owl:<http://www.w3.org/2002/07/owl#> 
+PREFIX bibo:<http://purl.org/ontology/bibo/> 
+PREFIX dc:<http://purl.org/dc/terms/> 
+PREFIX xsd:<http://www.w3.org/2001/XMLSchema#> 
+PREFIX up:<http://purl.uniprot.org/core/> 
+PREFIX faldo:<http://biohackathon.org/resource/faldo#> 
+
+SELECT distinct ?protein ?begin ?end 
+WHERE 
+{
+	?state a rdf:Statement.
+	VALUES ?protein { <http://purl.uniprot.org/uniprot/P01024> }  
+	?state rdf:subject ?protein.
+	?protein a up:Protein.
+
+	?state rdf:object ?annotation.
+  ?annotation a up:Glycosylation_Annotation.
+	?annotation up:range ?range .
+	?range faldo:begin/faldo:position ?begin .
+	?range faldo:end/faldo:position ?end.
+
+	?state up:source ?source	
+	
+}
+
+
+SELECT distinct  ?sub
+#?id ?title 
+WHERE 
+{
+	?sub a rdf:Statement.
+	VALUES ?protein { <http://purl.uniprot.org/uniprot/P01024> }  
+	?sub rdf:subject ?protein.
+	?protein a up:Protein.
+	#?sub rdf:property ?p.
+  
+	#?s up:citation ?citation.
+	#?citation dc:identifier ?id.
+	#?citation up:title ?title.
+} limit 10
+
+
+SELECT distinct ?citation ?id ?title 
+WHERE 
+{
+	?s a rdf:Statement.
+	?s rdfsup:citation ?citation.
+	?citation dc:identifier ?id.
+	?citation up:title ?title.
+}
+
+
+SELECT distinct ?comment ?citation ?id ?title 
+WHERE 
+{
+	VALUES ?protein { <http://purl.uniprot.org/uniprot/P01024> }
+	?protein a up:Protein.
+	?protein up:citation ?citation.
+	?citation dc:identifier ?id.
+	?citation up:title ?title.
+	
+	?protein up:annotation ?annotation .
+	?annotation a up:Glycosylation_Annotation.
+ 	?annotation up:range ?range .
+	?range faldo:begin/faldo:position "85"^^xsd:int.
+	?annotation rdfs:comment ?comment.
+}
+
+
+SELECT ?protein ?begin ?end ?seq ?comment
+WHERE 
+{
+	VALUES ?protein { <http://purl.uniprot.org/uniprot/P01024> }
+	?protein a up:Protein.
+
+	#?protein up:citation ?citation.
+	#?citation dc:identifier ?id.
+	#?citation up:title ?title.
+
+	?protein up:annotation ?annotation .
+	?annotation a up:Glycosylation_Annotation.
+	?annotation up:range ?range .
+	?range faldo:begin/faldo:position ?begin .
+	?range faldo:end/faldo:position ?end.
+
+	?annotation up:sequence ?seq.
+
+	?annotation rdfs:comment ?comment.
+}
+
+http://purl.uniprot.org/uniprot/P01024
+
+
+PREFIX keywords:<http://purl.uniprot.org/keywords/> 
+PREFIX uniprotkb:<http://purl.uniprot.org/uniprot/> 
+PREFIX taxon:<http://purl.uniprot.org/taxonomy/> 
+PREFIX ec:<http://purl.uniprot.org/enzyme/> 
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX skos:<http://www.w3.org/2004/02/skos/core#> 
+PREFIX owl:<http://www.w3.org/2002/07/owl#> 
+PREFIX bibo:<http://purl.org/ontology/bibo/> 
+PREFIX dc:<http://purl.org/dc/terms/> 
+PREFIX xsd:<http://www.w3.org/2001/XMLSchema#> 
+PREFIX up:<http://purl.uniprot.org/core/> 
+PREFIX faldo:<http://biohackathon.org/resource/faldo#> 
+
+SELECT distinct ?o
+WHERE 
+{
+	VALUES ?protein { <http://purl.uniprot.org/uniprot/P01024> }
+	?protein a up:Protein.
+	?protein up:annotation ?annotation .
+	?annotation a up:Glycosylation_Annotation.
+	?annotation rdfs:comment ?comment.
+}
+
+	?annotation up:range ?range .
+	?range faldo:begin/faldo:position ?begin .
+	?range faldo:end/faldo:position ?end.
