@@ -1,0 +1,22 @@
+SELECT DISTINCT ?date2 (count (distinct ?id) as ?ids) 
+#SELECT DISTINCT ?date2 ?id 
+WHERE {
+        # Accession Number
+        #VALUES ?AccessionNumber {"G43864TG"}
+        ?glycan glytoucan:has_primary_id ?AccessionNumber .
+        ?glycan glycan:has_glycosequence ?gseq .
+        ?gseq glycan:has_sequence ?Seq .
+        ?gseq glycan:in_carbohydrate_format glycan:carbohydrate_format_wurcs .
+        
+        graph ?g {
+			?glycan glycan:has_resource_entry ?entry.
+			?entry glytoucan:date_registered ?date.
+			?entry glycan:in_glycan_database glytoucan:database_glytoucan  .
+			?entry dcterms:identifier ?id .
+			BIND(STR(?date) as ?str_date)
+			BIND(SUBSTR(?str_date, 1, 4) as ?date2)
+		}
+			
+}
+order by ?date2
+ limit 200
