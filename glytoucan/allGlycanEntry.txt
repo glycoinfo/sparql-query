@@ -1,0 +1,15 @@
+PREFIX glycan: <http://purl.jp/bio/12/glyco/glycan#>
+PREFIX glytoucan:  <http://www.glytoucan.org/glyco/owl/glytoucan#>
+
+SELECT DISTINCT ?Saccharide ?PrimaryId ?Sequence
+#SELECT (COUNT(DISTINCT ?PrimaryId) AS ?total)
+FROM <http://rdf.glytoucan.org/core>
+FROM <http://rdf.glytoucan.org/sequence/wurcs>
+WHERE {
+    ?Saccharide glytoucan:has_primary_id ?PrimaryId .
+    ?Saccharide glycan:has_glycosequence ?GlycoSequence .
+    ?GlycoSequence glycan:has_sequence ?Sequence .
+    ?GlycoSequence glycan:in_carbohydrate_format glycan:carbohydrate_format_wurcs.
+}
+ORDER BY ?PrimaryId
+#limit 100
